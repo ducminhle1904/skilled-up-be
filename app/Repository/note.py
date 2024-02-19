@@ -1,5 +1,5 @@
 from app.Model.note import Note
-from config import db
+from app.Db.session import db
 from sqlalchemy.sql import select
 from sqlalchemy import update as update_query, delete as delete_query
 

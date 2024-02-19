@@ -4,15 +4,7 @@ from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 from jose import JWTError, jwt
 from typing import Optional
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-
-# Secret key for JWT
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = (os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+from app.Core.config import settings
 
 class JWTManager:
 
@@ -22,10 +14,10 @@ class JWTManager:
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
         else:
-            expire = datetime.utcnow() + timedelta(minutes=float(ACCESS_TOKEN_EXPIRE_MINUTES))
+            expire = datetime.utcnow() + timedelta(minutes=float(settings.ACCESS_TOKEN_EXPIRE_MINUTES))
 
         to_encode.update({"exp": expire})
-        encode_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+        encode_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
         return encode_jwt
     
@@ -37,7 +29,7 @@ class JWTManager:
             headers={"WWW-Authenticate": "Bearer"},
         )
         try:
-            decode_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            decode_token = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
             current_timestamp = datetime.utcnow().timestamp()
             if not decode_token:
                 raise credentials_exception
