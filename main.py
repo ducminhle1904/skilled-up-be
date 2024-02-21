@@ -7,4 +7,4 @@ app = create_app()
 
 if __name__ == '__main__':
     print("Starting server...")
-    uvicorn.run("main:app", host=settings.HOST_URL, port=settings.HOST_PORT, reload=True)
+    uvicorn.run("main:app", host=settings.HOST_URL, port=settings.HOST_PORT, reload=True, proxy_headers=True, forwarded_allow_ips="*")

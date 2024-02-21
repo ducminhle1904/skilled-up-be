@@ -8,7 +8,7 @@ from app.Middleware.JWTManager import JWTManager
 class IsAuthenticated(BasePermission):
     message = "User is not authenticated"
 
-    def has_permission(self, source: typing.Any, info: Info, **kwargs: typing.Any) -> bool | typing.Awaitable[bool]:
+    def has_permission(self, source: typing.Any, info: Info, **kwargs: typing.Any) -> bool:
         request = info.context["request"]
         # Access headers authentication
         authorization = request.headers.get("Authorization")
