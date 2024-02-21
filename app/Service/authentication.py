@@ -11,12 +11,13 @@ from app.Scalars.common_scalar import MutationResponse
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 
+
 class AuthenticationService:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     def verify_password(plain_password, hashed_password):
         return AuthenticationService.pwd_context.verify(plain_password, hashed_password)
-    
+
     def get_password_hash(password):
         return AuthenticationService.pwd_context.hash(password)
 
@@ -35,26 +36,26 @@ class AuthenticationService:
             token=token,
             user=user
         )
-    
+
     @staticmethod
     async def register(payload: RegisterInput) -> RegisterResponse:
         user = await UserRepository.get_by_email(payload.email)
         if user:
             return MutationResponse(code=400, success=False, message="User already exists")
-        
+
         # Validate email
         if not EMAIL_REGEX.match(payload.email):
             return MutationResponse(code=400, success=False, message="Invalid email")
-        
+
         hashed_password = AuthenticationService.get_password_hash(payload.password)
         user = user_model(username=payload.username, email=payload.email, password=hashed_password)
-        
+
         try:
             await UserRepository.create(user)
             return RegisterResult(code=201, success=True)
         except Exception as e:
             return MutationResponse(code=500, success=False, message="Failed to create user")
-        
+
     @staticmethod
     async def me(request: Request) -> user_model:
         try:
@@ -66,10 +67,9 @@ class AuthenticationService:
             token = authorization.split("Bearer ")[1]
             payload = JWTManager.verify_token(token)
             email = payload.get("sub")
-            
+
             user = await UserRepository.get_by_email(email)
 
             return user
         except Exception as e:
             raise HTTPException(status_code=401, detail="Invalid token or user not found") from e
-        

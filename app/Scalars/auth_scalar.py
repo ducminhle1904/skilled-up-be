@@ -11,15 +11,18 @@ class RegisterInput:
     email: str
     password: str
 
+
 @strawberry.input
 class LoginInput:
     email: str
     password: str
 
+
 @strawberry.type
 class LoginResult(MutationResponse):
     token: Optional[str]
     user: Optional[User]
+
 
 @strawberry.type
 class RegisterResult(MutationResponse):

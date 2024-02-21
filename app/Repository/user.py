@@ -3,6 +3,7 @@ from app.Db.session import db
 from sqlalchemy.sql import select
 from sqlalchemy import update as update_query, delete as delete_query
 
+
 class UserRepository:
 
     @staticmethod
@@ -17,13 +18,13 @@ class UserRepository:
         async with db as session:
             result = await session.execute(select(user_model).where(user_model.id == id))
             return result.scalars().first()
-        
+
     @staticmethod
     async def get_all():
         async with db as session:
             result = await session.execute(select(user_model))
             return result.scalars().all()
-        
+
     @staticmethod
     async def update(id: int, user_data: user_model):
         async with db as session:
@@ -33,7 +34,8 @@ class UserRepository:
             user.password = user_data.password
             user.email = user_data.email
 
-            query = update_query(user_model).where(user_model.id == id).values(**user.dict()).execution_options(synchronize_session="fetch")
+            query = update_query(user_model).where(user_model.id == id).values(**user.dict()).execution_options(
+                synchronize_session="fetch")
             await session.execute(query)
             await db.commit_rollback()
 

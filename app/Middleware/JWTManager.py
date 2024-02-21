@@ -6,6 +6,7 @@ from jose import JWTError, jwt
 from typing import Optional
 from app.Core.config import settings
 
+
 class JWTManager:
 
     @staticmethod
@@ -20,7 +21,7 @@ class JWTManager:
         encode_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
         return encode_jwt
-    
+
     @staticmethod
     def verify_token(token: str):
         credentials_exception = HTTPException(
@@ -38,4 +39,3 @@ class JWTManager:
             return decode_token
         except JWTError:
             raise credentials_exception
-        

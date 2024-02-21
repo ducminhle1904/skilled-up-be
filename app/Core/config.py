@@ -1,6 +1,7 @@
 import os
 from pydantic_settings import BaseSettings
 
+
 class Settings(BaseSettings):
     PROJECT_TITLE: str = "SkilledUp API"
     PROJECT_VERSION: str = "0.0.1"
@@ -11,5 +12,6 @@ class Settings(BaseSettings):
     SECRET_KEY: str = os.environ.get("SECRET_KEY")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES")
     ALGORITHM: str = os.environ.get("ALGORITHM")
+
 
 settings = Settings()

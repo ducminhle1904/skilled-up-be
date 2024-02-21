@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from app.Core.config import settings
 
+
 class DatabaseSession:
     def __init__(self, url: str = settings.DB_CONFIG):
         self.engine = create_async_engine(url, echo=True)
@@ -29,7 +30,7 @@ class DatabaseSession:
     async def __aenter__(self) -> AsyncSession:
         self.session = self.SessionLocal()
         return self.session
-    
+
     # This for clean up resources
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.session.close()
@@ -40,5 +41,6 @@ class DatabaseSession:
         except Exception:
             await self.session.rollback()
             raise
+
 
 db = DatabaseSession()
